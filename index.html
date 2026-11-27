@@ -165,6 +165,18 @@ input[type=range]{accent-color:var(--ink)}
 #bootStart.show{display:block;animation:bootBlink 1.2s ease infinite alternate}
 @keyframes bootBlink{from{filter:brightness(1)}to{filter:brightness(1.18)}}
 #boot .bFoot{margin-top:14px;font-size:11px;opacity:.65;font-weight:700}
+
+/* ===== v8 大きなカード表示（切り替え） ===== */
+.viewRow{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}
+.viewRow .chip.sel{background:var(--accent);color:#fff}
+.unitCards.bigMode{grid-template-columns:1fr 1fr}
+.unitCards.bigMode .uCard{flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden}
+.unitCards.bigMode .uThumb{width:100%;height:min(300px,54vw);flex:none}
+.unitCards.bigMode .uCard>div:last-child{padding:10px 12px 12px}
+.unitCards.bigMode .uBadge{z-index:3}
+#unitGrid.bigMode{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+#unitGrid.bigMode .charArt{height:min(360px,72vw)}
+@media(max-width:560px){.unitCards.bigMode{grid-template-columns:1fr 1fr}.unitCards.bigMode .uThumb{height:44vw}}
 footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 .liveBtns{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.liveBtns>*{flex:1}.liveBtns.btn,.liveBtns select{height:48px}
 </style>
@@ -178,13 +190,13 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <div id="bootPct">0%</div>
 <div id="bootMsg">起動中…</div>
 <button id="bootStart">▶ タップしてスタート</button>
-<div class="bFoot">音が出るゲームです。音量に注意してね。 / Ver 7 — Author: ぱんだ</div>
+<div class="bFoot">音が出るゲームです。音量に注意してね。 / Ver 8.1 — Author: ぱんだ</div>
 </div></div>
 <div id="bgLayer"><img id="bgImg" alt="" style="display:none"><video id="bgVideo" autoplay muted loop playsinline style="display:none"></video><div id="bgDark"></div></div>
 <div id="geo"></div>
 <div id="cutin"><div class="avatar"><div class="silhouette" style="width:18px;height:28px;margin:6px auto 0"></div></div><div style="min-width:0"><div class="skill" id="cutinSkill">SKILL / ノエル — ホワイト・ステップ +3000</div><div class="quote" id="cutinQuote">「消えた光を、もう一度」</div></div></div>
 <div id="app">
-<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v7.1</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
+<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v8.1</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
 <div class="prismLine"></div>
 <nav id="mainNav"><button data-s="home" class="active">ホーム</button><button data-s="live">ライブ</button><button data-s="unit">ユニット</button><button data-s="studio">スタジオ</button><button data-s="stage">ステージ</button><button data-s="settings">設定</button><button data-s="request">キャラ追加申請</button></nav>
 
@@ -196,7 +208,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <div class="dash">
 <div class="panel"><div class="panelHead"><b>◆ ユニット編成（ <span id="unitCount">1 / 4</span> ）</b><button class="chip" style="border-color:var(--accent2);color:#d63384" onclick="show('request')">＋ キャラ追加申請</button></div>
 <p style="margin:0 0 10px;font-size:13px;font-weight:700;opacity:.8">カードが編成メンバーです。空き枠はオーナー承認済みキャラだけ追加できます。</p>
-<div id="dashUnit" class="unitCards"></div>
+<div class="viewRow"><button class="chip sel" data-view="list">リスト表示</button><button class="chip" data-view="big">大きなカード表示</button></div><div id="dashUnit" class="unitCards"></div>
 <div class="panelHead" style="margin-top:14px"><b>ノーツ操作＆現在のステージ状態</b><span class="statusLine" id="statusLine">補正: 0ms / 背景: デフォルト</span></div>
 <div class="legend"><div><span class="dot" style="background:#4fd2ff"></span>TAP（タップ）</div><div><span class="dot" style="background:#ffb300"></span>CRITICAL（高得点）</div><div><span style="color:#ff5fb0;font-weight:900">▲</span> FLICK（上フリック）</div><div><span class="dot" style="background:#2ee6b4"></span>HOLD（緑・長押し）</div></div>
 <p style="font-size:12px;font-weight:700;opacity:.75">※ぱんだの既存キャラ17人が登録済み！ 編成メンバーのスキルがコンボ達成時にミニカットインで発動します。</p>
@@ -222,7 +234,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <p style="margin:8px 4px;font-size:13px">遊び方：流れてくるバーを、<b>下の判定ラインに重なった瞬間</b>にそのレーンをタップ。同時押しは2本指でOK。金色は高得点、ピンクは上にフリック（タップでもOK）、緑の帯は長押し。キーボードは D F J K / S D K L でも可。</p>
 <div id="resultBox"></div></div></section>
 
-<section id="unit" class="screen"><div class="card"><h2>ユニット編成（最大4人）</h2><p>ぱんだの既存キャラ全員が登録済みです。「編成に入れる」で最大4人まで選べます。スキルはライブ中、編成の順番にミニカットインで発動します。</p><div id="unitGrid" class="grid"></div></div></section>
+<section id="unit" class="screen"><div class="card"><h2>ユニット編成（最大4人）</h2><p>ぱんだの既存キャラ全員が登録済みです。「編成に入れる」で最大4人まで選べます。スキルはライブ中、編成の順番にミニカットインで発動します。</p><div class="viewRow"><button class="chip sel" data-view="list">リスト表示</button><button class="chip" data-view="big">大きなカード表示</button></div><div id="unitGrid" class="grid"></div></div></section>
 
 <section id="studio" class="screen"><div class="card"><h2>スタジオ（作曲＆譜面づくり）</h2>
 <label>楽曲タイトル（題名）</label><input type="text" id="stTitle" value="My Crystal Song">
@@ -265,7 +277,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <label>キャラ名</label><input type="text" id="rqName"><label>担当パート</label><input type="text" id="rqPart"><label>テーマカラー</label><input type="text" id="rqColor" placeholder="#cbf0ff"><label>スキル名</label><input type="text" id="rqSkill"><label>スキル効果</label><input type="text" id="rqEffect"><label>カットインセリフ</label><input type="text" id="rqQuote"><label>立ち絵画像パス</label><input type="text" id="rqImg"><label>申請理由・設定メモ</label><textarea id="rqMemo"></textarea>
 <div style="margin:12px 0"><button class="btn" id="rqMake">申請書を生成</button> <button class="btn sub" id="rqCopy">コピー</button></div>
 <textarea id="rqOut" class="out" readonly></textarea></div></section>
-<footer>PRISM//BEAT // LIVE STAGE v7.1 — Single HTML / No Network — Author: ぱんだ</footer>
+<footer>PRISM//BEAT // LIVE STAGE v8.1 — Single HTML / No Network — Author: ぱんだ</footer>
 </div>
 
 <script>
@@ -309,7 +321,7 @@ function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.to
 document.querySelectorAll("#mainNav button").forEach(b=>b.onclick=()=>show(b.dataset.s));
 function charArtHTML(c){if(c&&c.imageUrl)return `<img src="${c.imageUrl}" alt="${c.name}">`;return `<div class="crystal" style="width:54px;height:90px;left:12%;top:8%"></div><div class="crystal" style="width:36px;height:60px;right:14%;top:18%"></div><div class="silhouette"></div><div style="position:absolute;bottom:8px;z-index:3;background:#ffffffcc;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:900">CRYSTAL / ICE BLUE — 仮立ち絵</div>`;}
 function renderUnit(){const g=document.getElementById("unitGrid");g.innerHTML="";UNIT_CHARACTERS.forEach(c=>{const inU=unitSelection.includes(c.id);const d=document.createElement("div");d.className="slot";d.style.borderColor=c.themeColor;if(inU)d.style.boxShadow=`6px 6px 0 ${c.themeColor}`;d.innerHTML=`<div class="charArt" style="border:3px solid ${c.themeColor}">${charArtHTML(c)}</div><h3>${c.name}</h3><p>${c.group} / ${c.part}<br>テーマカラー ${c.themeColor}<br>スキル：${c.skillName}（${c.skillEffect}）${c.quote?`<br>「${c.quote}」`:""}</p><button class="btn ${inU?"pink":""}" onclick="toggleUnit('${c.id}')">${inU?"編成中（タップで外す）":"編成に入れる"}</button>`;g.appendChild(d);});}
-function renderSongs(){const list=document.getElementById("songList"),sel=document.getElementById("songSelect");list.innerHTML="";sel.innerHTML="";SONG_LIST.forEach((s,i)=>{list.innerHTML+=`<div class="song"><b>${s.title}</b><br>${s.artist}<br>BPM ${s.bpm} / ${s.difficulty}<br><button class="btn" onclick="selectSong(${i})">この曲で LIVE</button></div>`;const o=document.createElement("option");o.value=i;o.textContent=`${s.title} — ${s.artist}`;sel.appendChild(o);});}
+function renderSongs(){const list=document.getElementById("songList"),sel=document.getElementById("songSelect");if(sel)sel.innerHTML="";SONG_LIST.forEach((s,i)=>{if(list)list.innerHTML+=`<div class="song"><b>${s.title}</b><br>${s.artist}<br>BPM ${s.bpm} / ${s.difficulty}<br><button class="btn" onclick="selectSong(${i})">この曲でライブ</button></div>`;if(sel){const o=document.createElement("option");o.value=i;o.textContent=`${s.title} — ${s.artist}`;sel.appendChild(o);}});}
 function selectSong(i){document.getElementById("songSelect").value=i;show("live");}
 window.selectSong=selectSong;
 function seeded(seed){let x=seed*9301+49297;return()=>{x=(x*9301+49297)%233280;return x/233280;};}
@@ -436,7 +448,7 @@ function dismiss(){ensureAudio();document.getElementById("boot").classList.add("
 btn.onclick=dismiss;
 document.getElementById("boot").addEventListener("pointerdown",e=>{if(btn.classList.contains("show")&&e.target!==btn)dismiss();});
 })();
-renderUnit();renderSongs();fitCanvas();
+renderUnit();renderSongs();try{fitCanvas();}catch(e){}
 /* ===== v3 ダッシュボード ===== */
 let dash={song:0,diff:"normal"};
 function thumbHTML(c){if(c.imageUrl)return `<img src="${c.imageUrl}" alt="${c.name}" style="display:block">`;return `<div class="crystal" style="width:22px;height:36px;left:6px;top:4px"></div><div class="silhouette" style="width:30px;height:46px;margin:4px auto 0"></div>`;}
@@ -449,6 +461,12 @@ document.querySelectorAll("[data-dashdiff]").forEach(b=>b.onclick=()=>{dash.diff
 const dashHs=document.getElementById("dashHs");dashHs.value=settings.hiSpeed;document.getElementById("dashHsVal").textContent=(+dashHs.value).toFixed(1);
 dashHs.oninput=()=>{hs.value=dashHs.value;syncSettings();document.getElementById("dashHsVal").textContent=(+dashHs.value).toFixed(1);};
 document.getElementById("dashStart").onclick=()=>{show("live");startGame();};
+
+/* ===== カード表示切り替え ===== */
+let cardView="list";try{cardView=localStorage.getItem("prismbeatCardView")||"list"}catch(e){}
+function setCardView(v){cardView=v;try{localStorage.setItem("prismbeatCardView",v)}catch(e){}document.getElementById("dashUnit").classList.toggle("bigMode",v==="big");document.getElementById("unitGrid").classList.toggle("bigMode",v==="big");document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("sel",b.dataset.view===v));}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>setCardView(b.dataset.view));
+setCardView(cardView);
 renderDash();
 
 </script>
