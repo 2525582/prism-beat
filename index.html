@@ -55,6 +55,36 @@ canvas#game{width:100%;height:100%;display:block;touch-action:none}
 .chartCell{height:34px;border-radius:8px;border:1px solid #9adcf7;background:#fff;font-size:10px;font-weight:900;color:#243447}
 .chartCell.tap{background:#8be9ff}.chartCell.critical{background:#ffd83d}.chartCell.flick{background:#ff8ac2}.chartCell.hold{background:#7fe7c4}
 textarea.out{white-space:pre-wrap;word-break:break-all;background:#0f2436;color:#dff6ff;padding:12px;border-radius:12px;min-height:110px;width:100%}
+
+/* ===== v3 ダッシュボード ===== */
+.dash{display:grid;grid-template-columns:1.25fr .95fr;gap:14px;align-items:start}
+@media(max-width:860px){.dash{grid-template-columns:1fr}}
+.topChips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:10px 14px;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink);font-weight:900;font-size:13px}
+.chip.grad{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:none}
+.panel{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.panelHead{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:2px solid #bfe9fb;padding-bottom:8px;margin-bottom:10px}
+.panelHead b{letter-spacing:.04em}
+.unitCards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.unitCards{grid-template-columns:1fr}}
+.uCard{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:10px;background:#fff;color:#243447;position:relative;text-align:left}
+.uCard.empty{opacity:.55;border-style:dashed}
+.uThumb{width:52px;height:52px;border-radius:12px;flex:0 0 52px;position:relative;overflow:hidden;background:linear-gradient(160deg,#fff,#cbf0ff 50%,#7fd8ff)}
+.uThumb img{width:100%;height:100%;object-fit:cover}
+.uBadge{position:absolute;top:6px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:900;border-radius:999px;padding:2px 8px}
+.uCard small{display:block;color:#5b7a90;font-weight:800}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.legend div{border:2px solid #d7f0fb;border-radius:10px;padding:9px;font-weight:900;font-size:13px;background:#fff;color:#243447}
+.dot{display:inline-block;width:22px;height:8px;border-radius:99px;vertical-align:middle;margin-right:7px}
+.songItem{width:100%;text-align:left;border:2px solid #d7f0fb;background:#fff;color:#243447;border-radius:14px;padding:12px;margin-bottom:9px}
+.songItem.sel{border-color:var(--accent);background:#eaf8ff;box-shadow:0 6px 18px rgba(84,200,245,.25)}
+.songItem b{font-size:16px}.songItem small{display:block;color:#5b7a90;font-weight:800;margin-top:2px}
+.lv{float:right;background:#dff3ff;color:#22749e;border-radius:999px;padding:3px 10px;font-weight:900;font-size:12px}
+.diffRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}
+.diffBtn{padding:12px 6px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);font-weight:900}
+.diffBtn.sel{background:#eaf8ff;border-color:var(--accent);color:#126b96}
+#dashStart{width:100%;padding:18px;font-size:20px;border:none;border-radius:14px;background:linear-gradient(90deg,#35b6f2,#b45cf0,#ff5fae);color:#fff;font-weight:900;letter-spacing:.06em;box-shadow:0 10px 24px rgba(180,92,240,.35)}
+.statusLine{text-align:right;font-size:12px;font-weight:900;color:#22749e}
 footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 .liveBtns{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.liveBtns>*{flex:1}.liveBtns.btn,.liveBtns select{height:48px}
 </style>
@@ -64,11 +94,34 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <div id="geo"></div>
 <div id="cutin"><div><div style="font-weight:900;color:#ff7ac8;letter-spacing:.3em">SKILL CUT-IN / NOEL</div><div class="quote">「消えた光を、もう一度」</div><p><b>ホワイト・ステップ</b>　score +3000</p><button class="btn" onclick="closeCutin()">CLOSE</button></div></div>
 <div id="app">
-<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v2</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
+<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v3</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
 <nav id="mainNav"><button data-s="home" class="active">HOME</button><button data-s="live">LIVE</button><button data-s="unit">UNIT</button><button data-s="studio">STUDIO</button><button data-s="stage">STAGE</button><button data-s="settings">SETTINGS</button><button data-s="request">キャラ追加申請</button></nav>
 
-<section id="home" class="screen active"><div class="card"><h2>ようこそ、LIVE STAGEへ</h2><p><b>v2：横画面プレイ専用に作り直しました。</b> スマホは横持ちが一番やりやすい設計です。ステージは横長ワイド、レーンは下が広く、指2〜4本の同時タッチに対応しています。</p><p>初期ユニットはオーナー承認済みの <b>ノエル</b> のみ。外部通信なし、この1ファイルで iPhone / Android / iPad すべてで動きます。</p><button class="btn" onclick="show('live')">▶ LIVE（横画面で遊ぶ）</button></div>
-<div class="card"><h3>内蔵ソング（プログラム生成・著作権フリー）</h3><div id="songList" class="grid"></div><p style="font-size:13px">差し替え：コード内 <b>SONG_LIST.audioUrl</b> にMP3パスを入れるだけ。</p></div></section>
+<section id="home" class="screen active">
+<div class="panel" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+<div><div style="font-size:clamp(22px,4vw,32px);font-weight:900">PRISM<span style="color:var(--accent)">//</span>BEAT <span style="background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-radius:8px;padding:2px 10px;font-size:14px;vertical-align:middle">LIVE STAGE</span></div><div style="font-size:11px;letter-spacing:.18em;font-weight:800;opacity:.75">ORIGINAL CHARACTER RHYTHM STAGE // CUSTOM MV &amp; UNIT</div></div>
+<div class="topChips"><button class="chip" onclick="show('stage')">ステージ背景・UI色</button><button class="chip" onclick="show('settings')">音ズレ調整</button><button class="chip grad" onclick="show('studio')">作曲＆譜面スタジオ</button></div>
+</div></div>
+<div class="dash">
+<div class="panel"><div class="panelHead"><b>◆ UNIT FORMATION（ <span id="unitCount">1 / 4</span> ）</b><button class="chip" style="border-color:var(--accent2);color:#d63384" onclick="show('request')">＋ キャラ追加申請</button></div>
+<p style="margin:0 0 10px;font-size:13px;font-weight:700;opacity:.8">カードが編成メンバーです。空き枠はオーナー承認済みキャラだけ追加できます。</p>
+<div id="dashUnit" class="unitCards"></div>
+<div class="panelHead" style="margin-top:14px"><b>ノーツ操作＆現在のステージ状態</b><span class="statusLine" id="statusLine">補正: 0ms / 背景: デフォルト</span></div>
+<div class="legend"><div><span class="dot" style="background:#4fd2ff"></span>TAP（タップ）</div><div><span class="dot" style="background:#ffb300"></span>CRITICAL（高得点）</div><div><span style="color:#ff5fb0;font-weight:900">▲</span> FLICK（上フリック）</div><div><span class="dot" style="background:#2ee6b4"></span>HOLD（緑・長押し）</div></div>
+<p style="font-size:12px;font-weight:700;opacity:.75">※オーナー承認済みメンバー「ノエル」実装済み！ 編成メンバーのスキルがコンボ達成時にカットイン発動します。</p>
+</div>
+<div class="panel"><div class="panelHead"><b>◆ MUSIC SELECT // 楽曲リスト</b><span style="font-weight:900;font-size:13px">全3曲</span></div>
+<div id="dashSongs"></div>
+<div style="border-top:2px solid #bfe9fb;padding-top:10px"><span class="lv" id="dashBpm">BPM 132</span><div style="font-size:12px;font-weight:900;color:var(--accent)" id="dashGenre">SYNTH ORIGINAL</div>
+<div id="dashSongTitle" style="font-size:24px;font-weight:900;margin:4px 0">Prism Overture</div>
+<div id="dashSongArtist" style="font-size:13px;font-weight:800;opacity:.75">Artist: PRISM//BEAT Original Synth</div>
+<div class="diffRow"><button class="diffBtn" data-dashdiff="easy">NORMAL<br><small>Lv.8</small></button><button class="diffBtn sel" data-dashdiff="normal">HARD<br><small>Lv.12</small></button><button class="diffBtn" data-dashdiff="hard">MASTER<br><small>Lv.18</small></button></div>
+<label style="margin-top:2px">ハイスピード（ノーツ速度） <span id="dashHsVal">5.0</span></label>
+<div style="display:flex;gap:10px;align-items:center"><input type="range" id="dashHs" min="1" max="12" step="0.5" value="5" style="flex:1"><button id="dashStart">▶ LIVE START!</button></div>
+<p style="font-size:12px;font-weight:700;opacity:.7">スマホは横画面＋全画面が一番やりやすいです。LIVE STARTを押すとそのまま始まります。</p>
+</div></div>
+</div>
+</section>
 
 <section id="live" class="screen"><div class="card" id="liveCard">
 <div id="rotateHint">スマホを横向きにすると、めちゃくちゃやりやすくなります。縦のままでも遊べます。</div>
@@ -110,7 +163,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <label>キャラ名</label><input type="text" id="rqName"><label>担当パート</label><input type="text" id="rqPart"><label>テーマカラー</label><input type="text" id="rqColor" placeholder="#cbf0ff"><label>スキル名</label><input type="text" id="rqSkill"><label>スキル効果</label><input type="text" id="rqEffect"><label>カットインセリフ</label><input type="text" id="rqQuote"><label>立ち絵画像パス</label><input type="text" id="rqImg"><label>申請理由・設定メモ</label><textarea id="rqMemo"></textarea>
 <div style="margin:12px 0"><button class="btn" id="rqMake">申請書を生成</button> <button class="btn sub" id="rqCopy">コピー</button></div>
 <textarea id="rqOut" class="out" readonly></textarea></div></section>
-<footer>PRISM//BEAT // LIVE STAGE v2 — Single HTML / No Network — Author: ぱんだ</footer>
+<footer>PRISM//BEAT // LIVE STAGE v3 — Single HTML / No Network — Author: ぱんだ</footer>
 </div>
 
 <script>
@@ -242,6 +295,20 @@ applyStage();
 document.getElementById("rqMake").onclick=()=>{const v=id=>document.getElementById(id).value||"（未記入）";document.getElementById("rqOut").value=`\nキャラ名: ${v("rqName")}\n担当パート: ${v("rqPart")}\nテーマカラー: ${v("rqColor")}\nスキル名: ${v("rqSkill")}\nスキル効果: ${v("rqEffect")}\nカットインセリフ: ${v("rqQuote")}\n立ち絵画像パス: ${v("rqImg")}\n設定メモ: ${v("rqMemo")}\n※オーナー（ぱす）へ送って承認を得てください。`;};
 document.getElementById("rqCopy").onclick=()=>{const t=document.getElementById("rqOut");t.select();if(navigator.clipboard)navigator.clipboard.writeText(t.value);alert("コピーしました");};
 renderUnit();renderSongs();fitCanvas();
+/* ===== v3 ダッシュボード ===== */
+let dash={song:0,diff:"normal"};
+function thumbHTML(c){if(c.imageUrl)return `<img src="${c.imageUrl}" alt="">`;return `<div class="crystal" style="width:22px;height:36px;left:6px;top:4px"></div><div class="silhouette" style="width:30px;height:46px;margin:4px auto 0"></div>`;}
+function renderDash(){const u=document.getElementById("dashUnit");u.innerHTML="";for(let i=0;i<4;i++){const c=UNIT_CHARACTERS[i];const d=document.createElement("div");d.className="uCard"+(c?"":" empty");d.innerHTML=c?`<span class="uBadge">IN UNIT #${i+1}</span><div class="uThumb">${thumbHTML(c)}</div><div><small>${c.part}</small><b style="font-size:17px">${c.name}</b><small>${c.skillName}（${c.skillEffect.toUpperCase()}）</small></div>`:`<div class="uThumb" style="opacity:.4"></div><div><small>EMPTY SLOT</small><b>空き枠 ${i+1}</b><small>承認済みキャラなし</small></div>`;u.appendChild(d);}
+ document.getElementById("unitCount").textContent=UNIT_CHARACTERS.length+" / 4";
+ const s=document.getElementById("dashSongs");s.innerHTML="";SONG_LIST.slice(0,3).forEach((sg,i)=>{const b=document.createElement("button");b.className="songItem"+(i===dash.song?" sel":"");b.innerHTML=`<span class="lv">Lv.${10+i*2}</span><b>${sg.title}</b><small>${sg.artist}（BPM ${sg.bpm}）</small>`;b.onclick=()=>{dash.song=i;syncDash();};s.appendChild(b);});syncDash(false);}
+function syncDash(render=true){const sg=SONG_LIST[dash.song];if(!sg)return;document.getElementById("dashSongTitle").textContent=sg.title;document.getElementById("dashSongArtist").textContent="Artist: "+sg.artist;document.getElementById("dashBpm").textContent="BPM "+sg.bpm;document.getElementById("songSelect").value=dash.song;document.querySelectorAll("[data-dashdiff]").forEach(b=>b.classList.toggle("sel",b.dataset.dashdiff===dash.diff));const dd=document.getElementById("diffSelect");if(dd)dd.value=dash.diff;document.getElementById("statusLine").textContent=`補正: ${settings.offsetMs}ms / 背景: ${STAGE_CONFIG.backgroundImage||STAGE_CONFIG.backgroundVideo?"カスタム":"デフォルト"}`;if(render)renderDashSongsOnly();}
+function renderDashSongsOnly(){document.querySelectorAll("#dashSongs .songItem").forEach((el,i)=>el.classList.toggle("sel",i===dash.song));}
+document.querySelectorAll("[data-dashdiff]").forEach(b=>b.onclick=()=>{dash.diff=b.dataset.dashdiff;syncDash(false);});
+const dashHs=document.getElementById("dashHs");dashHs.value=settings.hiSpeed;document.getElementById("dashHsVal").textContent=(+dashHs.value).toFixed(1);
+dashHs.oninput=()=>{hs.value=dashHs.value;syncSettings();document.getElementById("dashHsVal").textContent=(+dashHs.value).toFixed(1);};
+document.getElementById("dashStart").onclick=()=>{show("live");startGame();};
+renderDash();
+
 </script>
 </body>
 </html>
