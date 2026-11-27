@@ -47,8 +47,8 @@ canvas#game{width:100%;height:100%;display:block;touch-action:none}
 #judgeText small{display:block;font-size:clamp(13px,2.5vw,20px);color:#ffe66d}
 #rotateHint{display:none;background:#fff3f8;border:2px solid var(--accent2);color:#8a2453;border-radius:12px;padding:10px;font-weight:900;text-align:center;margin-bottom:8px}
 @media(orientation:portrait) and (max-width:820px){#rotateHint{display:block}#stageWrap{aspect-ratio:4/3}}
-#cutin{position:fixed;inset:0;z-index:50;display:none;align-items:center;background:linear-gradient(90deg,rgba(203,240,255,.97) 0 55%,transparent);padding:24px}
-#cutin.show{display:flex}#cutin.quote{font-size:clamp(22px,5vw,40px);font-weight:900;color:#17384d}
+#cutin{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translate(-50%,-16px);z-index:60;display:flex;align-items:center;gap:10px;width:min(520px,92vw);padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.92);border:2px solid #cbf0ff;box-shadow:0 8px 24px rgba(60,150,200,.3);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+#cutin.show{opacity:1;transform:translate(-50%,0)}#cutin .avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:linear-gradient(160deg,#fff,#cbf0ff 55%,#7fd8ff);border:2px solid #fff;position:relative;overflow:hidden}#cutin .quote{font-size:15px;font-weight:900;color:#17384d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#cutin .skill{font-size:11px;font-weight:900;color:#d63384;letter-spacing:.08em;white-space:nowrap}
 .seq{display:grid;grid-template-columns:58px repeat(16,1fr);gap:4px;overflow-x:auto}.seq div{font-size:11px;text-align:center;padding:6px 2px}
 .step{border:1px solid var(--line);background:#fff;color:#243447;border-radius:6px;min-width:27px;height:34px}.step.on{background:var(--accent);color:#fff}.step.beat{outline:2px solid var(--accent2)}
 .chartGrid{display:grid;grid-template-columns:46px repeat(4,1fr);gap:4px}
@@ -118,9 +118,9 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <body>
 <div id="bgLayer"><img id="bgImg" alt="" style="display:none"><video id="bgVideo" autoplay muted loop playsinline style="display:none"></video><div id="bgDark"></div></div>
 <div id="geo"></div>
-<div id="cutin"><div><div style="font-weight:900;color:#ff7ac8;letter-spacing:.3em">SKILL CUT-IN / NOEL</div><div class="quote">「消えた光を、もう一度」</div><p><b>ホワイト・ステップ</b>　score +3000</p><button class="btn" onclick="closeCutin()">CLOSE</button></div></div>
+<div id="cutin"><div class="avatar"><div class="silhouette" style="width:18px;height:28px;margin:6px auto 0"></div></div><div style="min-width:0"><div class="skill">SKILL / ノエル — ホワイト・ステップ +3000</div><div class="quote">「消えた光を、もう一度」</div></div></div>
 <div id="app">
-<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v4</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
+<header><div class="logo">PRISM<span>//</span>BEAT<small>// LIVE STAGE v4.1</small></div><div class="pill">iPhone / Android / iPad<br>横画面推奨・オフライン</div></header>
 <div class="prismLine"></div>
 <nav id="mainNav"><button data-s="home" class="active">HOME</button><button data-s="live">LIVE</button><button data-s="unit">UNIT</button><button data-s="studio">STUDIO</button><button data-s="stage">STAGE</button><button data-s="settings">SETTINGS</button><button data-s="request">キャラ追加申請</button></nav>
 
@@ -192,6 +192,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <label>ノーツ速度 ハイスピード <span id="hsVal">5.0</span>（1.0〜12.0）</label><input type="range" id="hsRange" min="1" max="12" step="0.5" value="5">
 <p style="font-size:13px">迷ったら 4.0〜6.0。速いほど上級者向けです。v2の初期値はゆっくりめの 5.0 にしました。</p>
 <label>判定オフセット <span id="offVal">0 ms</span>（-200〜+200）</label><input type="range" id="offRange" min="-200" max="200" step="1" value="0">
+<label>スキルカットイン表示</label><select id="cutinSel"><option value="mini">ミニ表示（画面上部の小さい帯・ゲームを塞がない）</option><option value="off">オフ（演出なし・スコアだけ入る）</option></select>
 <h3>音ズレ調整（TAP CHECK）</h3><p>メトロノーム（120 BPM）に合わせて5回以上タップすると平均ズレを自動でオフセットに反映します。</p>
 <button class="btn sub" id="tapCheckStart">▶ TAP CHECK 開始</button> <button class="btn pink" id="tapCheckBtn" disabled style="font-size:20px;padding:16px 26px">TAP!</button> <span id="tapCheckInfo">未計測</span>
 </div></section>
@@ -200,7 +201,7 @@ footer{font-size:12px;opacity:.8;text-align:center;padding:16px}
 <label>キャラ名</label><input type="text" id="rqName"><label>担当パート</label><input type="text" id="rqPart"><label>テーマカラー</label><input type="text" id="rqColor" placeholder="#cbf0ff"><label>スキル名</label><input type="text" id="rqSkill"><label>スキル効果</label><input type="text" id="rqEffect"><label>カットインセリフ</label><input type="text" id="rqQuote"><label>立ち絵画像パス</label><input type="text" id="rqImg"><label>申請理由・設定メモ</label><textarea id="rqMemo"></textarea>
 <div style="margin:12px 0"><button class="btn" id="rqMake">申請書を生成</button> <button class="btn sub" id="rqCopy">コピー</button></div>
 <textarea id="rqOut" class="out" readonly></textarea></div></section>
-<footer>PRISM//BEAT // LIVE STAGE v4 — Single HTML / No Network — Author: ぱんだ</footer>
+<footer>PRISM//BEAT // LIVE STAGE v4.1 — Single HTML / No Network — Author: ぱんだ</footer>
 </div>
 
 <script>
@@ -213,8 +214,8 @@ const SONG_LIST=[
 ];
 const STAGE_CONFIG={backgroundImage:"",backgroundVideo:"",darkness:0.45,theme:"pastel"};
 let audioCtx=null,master=null;
-let settings={hiSpeed:5,offsetMs:0};
-try{const s=JSON.parse(localStorage.getItem("prismbeat2")||"{}");if(s.hiSpeed)settings.hiSpeed=s.hiSpeed;if(typeof s.offsetMs==="number")settings.offsetMs=s.offsetMs;}catch(e){}
+let settings={hiSpeed:5,offsetMs:0,cutin:"mini"};
+try{const s=JSON.parse(localStorage.getItem("prismbeat2")||"{}");if(s.hiSpeed)settings.hiSpeed=s.hiSpeed;if(typeof s.offsetMs==="number")settings.offsetMs=s.offsetMs;if(s.cutin)settings.cutin=s.cutin;}catch(e){}
 function saveSettings(){try{localStorage.setItem("prismbeat2",JSON.stringify(settings))}catch(e){}}
 function ensureAudio(){if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;audioCtx=new AC();master=audioCtx.createGain();master.gain.value=.8;master.connect(audioCtx.destination);}if(audioCtx.state==="suspended")audioCtx.resume();return audioCtx;}
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("#mainNav button").forEach(b=>b.classList.toggle("active",b.dataset.s===id));window.scrollTo(0,0);if(id==="live")fitCanvas();}
@@ -282,7 +283,7 @@ game.flash[lane]=1;playTone(880,audioCtx.currentTime,.06,"square",.07);
 if(!best||bestAbs>.20)return;const n=best.n;n.hit=true;n.holding=true;game.combo++;game.maxCombo=Math.max(game.maxCombo,game.combo);burst(lane);
 const ms=Math.round(best.d*1000);const fb=ms<-15?"FAST":ms>15?"LATE":"";let label,pts;if(bestAbs<=.07){label="PERFECT";pts=1000;game.counts.PERFECT++;}else if(bestAbs<=.12){label="GREAT";pts=700;game.counts.GREAT++;}else{label="GOOD";pts=300;game.counts.GOOD++;}game.score+=pts;showJudge(label,fb?fb+" "+Math.abs(ms)+"ms":"");checkSkill();}
 function releaseLane(lane){game.notes.forEach(n=>{if(n.lane===lane&&n.type==="hold"&&n.hit)n.holding=false;});}
-function checkSkill(){const c=UNIT_CHARACTERS[0];[30,60,100].forEach(th=>{if(game.combo>=th&&!game.skillUsed[th]){game.skillUsed[th]=1;game.score+=c.skillValue||3000;document.getElementById("cutin").classList.add("show");setTimeout(closeCutin,1700);}});}
+function checkSkill(){const c=UNIT_CHARACTERS[0];[30,60,100].forEach(th=>{if(game.combo>=th&&!game.skillUsed[th]){game.skillUsed[th]=1;game.score+=c.skillValue||3000;if(settings.cutin!=="off"){document.getElementById("cutin").classList.add("show");setTimeout(closeCutin,1200);}}});}
 function closeCutin(){document.getElementById("cutin").classList.remove("show");}window.closeCutin=closeCutin;
 document.getElementById("playBtn").onclick=()=>startGame();
 document.getElementById("stopBtn").onclick=()=>stopGame();
@@ -298,6 +299,7 @@ window.addEventListener("keydown",e=>{const m={d:0,f:1,j:2,k:3,s:0,l:3,D:0,F:1,J
 window.addEventListener("keyup",e=>{const m={d:0,f:1,j:2,k:3,s:0,l:3,D:0,F:1,J:2,K:3,S:0,L:3};if(e.key in m)releaseLane(m[e.key]);});
 
 /* 設定 */
+const cutinSel=document.getElementById("cutinSel");cutinSel.value=settings.cutin||"mini";cutinSel.onchange=()=>{settings.cutin=cutinSel.value;saveSettings();};
 const hs=document.getElementById("hsRange"),off=document.getElementById("offRange");hs.value=settings.hiSpeed;off.value=settings.offsetMs;
 function syncSettings(){document.getElementById("hsVal").textContent=(+hs.value).toFixed(1);document.getElementById("offVal").textContent=off.value+" ms";settings.hiSpeed=+hs.value;settings.offsetMs=+off.value;saveSettings();}
 hs.oninput=syncSettings;off.oninput=syncSettings;syncSettings();
